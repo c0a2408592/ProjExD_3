@@ -213,6 +213,7 @@ def main():
                 pg.display.update()
                 time.sleep(1)
                 return
+            
         for a, beam in enumerate(beams):
             for b, bomb in enumerate(bombs):
                 if beam is not None and bomb is not None:
