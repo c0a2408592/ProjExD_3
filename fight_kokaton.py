@@ -174,7 +174,6 @@ class Explosion:
         
         img = self.img[self.life % 2]
         screen.blit(img, self.rct)
-
         self.life -= 1
 
 
