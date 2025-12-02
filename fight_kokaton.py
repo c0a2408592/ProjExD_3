@@ -158,6 +158,26 @@ class Score:
         screen.blit(self.img, self.rct)
 
 
+class Explosion:
+    """
+    爆発エフェクトクラス
+    """
+    def __init__(self, center):
+        self.img = [pg.image.load(f"fig/explosion.gif"), pg.transform.flip(pg.image.load("fig/explosion.gif"), True, False)]
+        self.life = 30
+        self.rct = self.img[0].get_rect()
+        self.rct.center = center
+
+    def update(self, screen):
+        if self.life <= 0:
+            return
+        
+        img = self.img[self.life % 2]
+        screen.blit(img, self.rct)
+
+        self.life -= 1
+
+
 def main():
     pg.display.set_caption("たたかえ！こうかとん")
     screen = pg.display.set_mode((WIDTH, HEIGHT))    
@@ -167,6 +187,7 @@ def main():
     score = Score()
     bombs =[]
     beams = []
+    explosions = []
     for _ in range(NUM_OF_BOMBS):
         bomb = Bomb((255, 0, 0), 10)
         bombs.append(bomb)
@@ -198,6 +219,7 @@ def main():
                 if beam is not None and bomb is not None:
                     if beam.rct.colliderect(bomb.rct):
                         # ビームが爆弾に当たったら，爆弾とビームを消す
+                        explosions.append(Explosion(bomb.rct.center))
                         # beam = None
                         bombs[b] = None
                         beams[a] = None
@@ -213,6 +235,9 @@ def main():
             beam.update(screen)   
         for bomb in bombs:  # 爆弾が存在していたら
             bomb.update(screen)
+        for ex in explosions:
+            ex.update(screen)
+        explosions = [ex for ex in explosions if ex.life > 0]
         score.update(screen)
         pg.display.update()
         tmr += 1
